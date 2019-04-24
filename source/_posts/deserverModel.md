@@ -1,8 +1,8 @@
 ---
 title: 设计模式-发布/订阅者模式
 date: 2019-02-20 23:47:13
-tags: 设计模式
-categories: [JavaScript,设计模式]
+tags: designModel
+categories: [JavaScript,designModel]
 ---
 
 > 发布/订阅者模式,是我们在生产环境中常用的一种模式，他的运用非常的丰富。在我们常用框架Vue,短信的订阅与发布等等。都有着发布/订阅者模式的身影。

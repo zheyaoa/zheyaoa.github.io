@@ -1,8 +1,8 @@
 ---
 title: 设计模式--单例模式
 date: 2019-01-31 17:00:06
-tags: 设计模式
-categories: [JavaScript,设计模式]
+tags: designModel
+categories: [JavaScript,designModel]
 ---
 
 > 单例模式是一种常用的模式,有一些对象我们往往只需要一个。例如全局缓存，浏览器的window对象，在JavaScript中，单例模式的作用依旧广泛。例如实现一个唯一的悬浮窗，模拟JQuery/Vue的one函数。

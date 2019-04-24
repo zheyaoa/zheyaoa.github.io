@@ -1,8 +1,8 @@
 ---
 title: 数组中出现次数超过一半的数字(快排解法)
 date: 2019-03-25 16:31:43
-tags: 快速排序
-categories: [Algorithm,排序]
+tags: quickSort
+categories: [Algorithm,sort]
 ---
 
 最近一直在刷算法，在牛客上刷到了一题[数组中出现次数超过一半的数字](https://www.nowcoder.com/ta/coding-interviews/question-ranking?uuid=e8a1b01a2df14cb2b228b30ee6a92163&rp=2),题目大意如下。
