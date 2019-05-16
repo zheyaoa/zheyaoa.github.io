@@ -57,10 +57,10 @@ categories: hexo
 2. 如果使用了自定义主体如next,到next目录下删除.git 文件（不删除的话会造成待会git push失败）。如未使用则跳过这一步。
 3. 重新回到Blog的根目录下，执行代码`git init`
 4. `git checkout -b hexo `
-5. `git add romote 你的项目地址:hexo` 这一步将与你远程仓库建立连接
+5. `git romote add origin 你的项目地址` 这一步将与你远程仓库建立连接
 6. `git add .`
 7. `git commit -m"hexo migrate"`
-8. `git push` 
+8. `git push origin hexo`  
 
 做完这一步后，你已经将本地的hexo目录提交到了Git 远程仓库，但是有一点值得注意的是。自定义主题是不会被上传到 Git 仓库的。为了统一博客的主题，当在新电脑中从远程仓库中拉取hexo目录时,需要重新配置博客的主题。这一点在后面会给出具体的解决办法。
 
@@ -68,7 +68,7 @@ categories: hexo
 
 ​	当我们在新电脑中需要同步博客时，我们要做的也很简单。步骤如下
 
-1. `git clone 项目url:hexo`同步Git 仓库项目目录的hexo分支。
+1. `git clone -b hexo 项目url`同步Git 仓库项目目录的hexo分支。
 2. 切换到项目目录下
 3. `npm install`
 4. 在这里其实就已经可以运行博客啦。我们执行`hexo g \hexo s `就可以在**localhost:4000**上看到博客了。我们发现博客的样式发生了变化。

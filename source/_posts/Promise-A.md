@@ -2,7 +2,7 @@
 title: 手写一个Promise/A规范的Promise
 date: 2019-03-05 15:58:25
 tags: [Promise]
-categories: [JavaScript,ES6]
+categories: [JavaScript,ECMAScript6]
 ---
 
 > 最近比较闲，忙里偷闲看了下Promise/A+标准，参考了一些文章手动实现了一个Promise。为了加深印象，在这里做一个总结。也供大家参考
