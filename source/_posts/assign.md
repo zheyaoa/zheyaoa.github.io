@@ -2,10 +2,14 @@
 title: ES6下JavaScript对象方法Object.assign()
 date: 2019-05-16 23:03:53
 tags: Object
-categories: JavaScript
+categories: [JavaScript,ECMAScript6]
 ---
 
-一直觉得自己的原生JavaScript并不是太好，所以最看了看[MDN_JavaScript](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)板块下的一些知识。这里总结一下`Object.assign()`的用法
+，所以最近看了看[MDN_JavaScript](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)板块下的一些知识。这里总结一下`Object.assign()`的用法
+
+，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法
+
+最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法
 
 <!-- more --> 
 
