@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="prototype,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="在JavaScript的使用中，this的指向问题始终是一个难点。不同的调用方式，会使this指向不同的对象。而使用call,apply,bind等方式，可改变this的指向,完成一些令人惊叹的黑魔法 最近了解了一下Function对象下的bind方法,同时对JavaScript对象下this指向,call,apply等方法有了更深刻的了解">
+<meta name="keywords" content="prototype">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6下的Function.bind方法">
+<meta property="og:url" content="http://yoursite.com/2019/06/03/bind/index.html">
+<meta property="og:site_name" content="zheyao 的博客">
+<meta property="og:description" content="在JavaScript的使用中，this的指向问题始终是一个难点。不同的调用方式，会使this指向不同的对象。而使用call,apply,bind等方式，可改变this的指向,完成一些令人惊叹的黑魔法 最近了解了一下Function对象下的bind方法,同时对JavaScript对象下this指向,call,apply等方法有了更深刻的了解">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-18T13:40:52.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES6下的Function.bind方法">
+<meta name="twitter:description" content="在JavaScript的使用中，this的指向问题始终是一个难点。不同的调用方式，会使this指向不同的对象。而使用call,apply,bind等方式，可改变this的指向,完成一些令人惊叹的黑魔法 最近了解了一下Function对象下的bind方法,同时对JavaScript对象下this指向,call,apply等方法有了更深刻的了解">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/03/bind/">
+
+
+
+
+
+  <title>ES6下的Function.bind方法 | zheyao 的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zheyao 的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/03/bind/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zheyao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://cdn.zheyao.top/blogHeader.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zheyao 的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ES6下的Function.bind方法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-03T16:09:26+08:00">
+                2019-06-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/ECMAScript6/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript6</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在JavaScript的使用中，<strong>this</strong>的指向问题始终是一个难点。不同的调用方式，会使<strong>this</strong>指向不同的对象。而使用<strong>call,apply,bind</strong>等方式，可改变this的指向,完成一些令人惊叹的黑魔法</p>
+<p>最近了解了一下Function对象下的bind方法,同时对JavaScript对象下<strong>this</strong>指向,<strong>call,apply</strong>等方法有了更深刻的了解</p>
+<a id="more"></a>
+<h3 id="function-apply-thisArg-argsArray"><a href="#function-apply-thisArg-argsArray" class="headerlink" title="function.apply(thisArg,[argsArray])"></a>function.apply(thisArg,[argsArray])</h3><blockquote>
+<p>thisArg:　function函数运行时的this值</p>
+<p>argsArray:　一个数组或者类数组对象,其中的数组元素将作为单独的参数传给function函数 </p>
+<p>returns:  调用this值和和参数产生的结果</p>
+</blockquote>
+<p>下面讲述一些apply的简单使用</p>
+<ul>
+<li>用apply 将数组push 进另一个数组</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> elements = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>]</span><br><span class="line"><span class="keyword">var</span> arr = [<span class="string">'a'</span>];</span><br><span class="line"><span class="built_in">Array</span>.prototype.push.apply(arr,elements)</span><br><span class="line"><span class="built_in">console</span>.log(arr,elements)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>找出数组中最大/最小的数</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> nums = [<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>]</span><br><span class="line"><span class="keyword">var</span> max = <span class="built_in">Math</span>.max.apply(<span class="literal">null</span>,nums)</span><br><span class="line"><span class="keyword">var</span> min = <span class="built_in">Math</span>.min.apply(<span class="literal">null</span>,nums)</span><br><span class="line"><span class="built_in">console</span>.log(max,min)</span><br></pre></td></tr></table></figure>
+<h3 id="function-call-thisArg-arg1-args2-args3"><a href="#function-call-thisArg-arg1-args2-args3" class="headerlink" title="function.call(thisArg,arg1,args2,args3)"></a>function.call(thisArg,arg1,args2,args3)</h3><blockquote>
+<p>thisArg:　function函数运行时的this值</p>
+<p>arg1, arg2, …:　 指定的参数列表。</p>
+<p>returns:  调用this值和和参数产生的结果</p>
+</blockquote>
+<p><code>function.call</code> 与　<code>function.apply</code>　的本质其实是一样的。只有一个区别，就是 <code>call()</code> 方法接受的是<strong>一个参数列表</strong>，而 <code>apply()</code> 方法接受的是<strong>一个包含多个参数的数组</strong></p>
+<h3 id="function-bind-thisArg-arg1-arg2-…"><a href="#function-bind-thisArg-arg1-arg2-…" class="headerlink" title="function.bind(thisArg,arg1,arg2,…)"></a>function.bind(thisArg,arg1,arg2,…)</h3><blockquote>
+<p>thisArg: function函数运行时指向的this值</p>
+<p>arg1,arg2,…: 当目标函数被调用时，预先添加到绑定函数的参数列表中的参数。</p>
+<p>returns:       返回一个原函数的拷贝，并拥有指定的<strong>this</strong>值和初始参数。</p>
+</blockquote>
+<ul>
+<li>创建绑定函数</li>
+</ul>
+<p><code>bind()</code>的另一个最简单的用法是使一个函数拥有预设的初始参数。只要将这些参数（如果有的话）作为<code>bind()</code>的参数写在<code>this</code>后面。当绑定函数被调用时，这些参数会被插入到目标函数的参数列表的开始位置，传递给绑定函数的参数会跟在它们后面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.x = <span class="number">9</span>;    <span class="comment">// 在浏览器中，this指向全局的 "window" 对象</span></span><br><span class="line"><span class="keyword">var</span> <span class="built_in">module</span> = &#123;</span><br><span class="line">  x: <span class="number">81</span>,</span><br><span class="line">  getX: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123; <span class="keyword">return</span> <span class="keyword">this</span>.x; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="built_in">module</span>.getX(); <span class="comment">// 81</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> retrieveX = <span class="built_in">module</span>.getX;</span><br><span class="line">retrieveX();   </span><br><span class="line"><span class="comment">// 返回9 - 因为函数是在全局作用域中调用的</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 创建一个新函数，把 'this' 绑定到 module 对象</span></span><br><span class="line"><span class="comment">// 新手可能会将全局变量 x 与 module 的属性 x 混淆</span></span><br><span class="line"><span class="keyword">var</span> boundGetX = retrieveX.bind(<span class="built_in">module</span>);</span><br><span class="line">boundGetX(); <span class="comment">// 81</span></span><br></pre></td></tr></table></figure>
+<h3 id="bind函数的初步实现"><a href="#bind函数的初步实现" class="headerlink" title="bind函数的初步实现"></a>bind函数的初步实现</h3><p>bind的实质,其实为call的语法糖。我们只需返回一个利用<strong>Function.call</strong>改变this指向的函数即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.bindDemo = <span class="function"><span class="keyword">function</span>(<span class="params">obj,args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> arg = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">const</span> that = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       args = arg.concat(<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>));</span><br><span class="line">       <span class="keyword">return</span> that.apply(obj,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> o = &#123;</span><br><span class="line">    name:<span class="string">'yyx'</span>,</span><br><span class="line">    age:<span class="string">'20'</span>,</span><br><span class="line">    getAge()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> getAge = o.getAge;</span><br><span class="line"><span class="keyword">const</span> bindGetAge = getAge.bindDemo(o)</span><br><span class="line">bindGetAge()    <span class="comment">//20</span></span><br></pre></td></tr></table></figure>
+<h3 id="将bind函数绑定在原型链上"><a href="#将bind函数绑定在原型链上" class="headerlink" title="将bind函数绑定在原型链上"></a>将bind函数绑定在原型链上</h3><p>上面的函数已经可以解决一些实际问题,但依旧存在一些问题。当<strong>thisArg</strong>为原型链上的对象时,bind对象需要能调用原型上的方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Function</span>.prototype.bindDemo = <span class="function"><span class="keyword">function</span>(<span class="params">obj,args</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">let</span> arg = <span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>,<span class="number">1</span>);</span><br><span class="line">    <span class="keyword">const</span> that = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">let</span> tmp =  <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">       args = arg.concat(<span class="built_in">Array</span>.prototype.slice.call(<span class="built_in">arguments</span>));</span><br><span class="line">       <span class="keyword">return</span> that.apply(obj,args);</span><br><span class="line">    &#125;</span><br><span class="line">    tmp.prototype = <span class="keyword">this</span>.prototype;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> o = &#123;</span><br><span class="line">    name:<span class="string">'yyx'</span>,</span><br><span class="line">    age:<span class="string">'20'</span>,</span><br><span class="line">    getAge()&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.age);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> getAge = o.getAge;</span><br><span class="line"><span class="keyword">const</span> bindGetAge = getAge.bindDemo(o)</span><br><span class="line">bindGetAge()   <span class="comment">//20</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/prototype/" rel="tag"># prototype</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/16/assign/" rel="next" title="ES6下JavaScript对象方法Object.assign()">
+                <i class="fa fa-chevron-left"></i> ES6下JavaScript对象方法Object.assign()
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zheyao.top/blogHeader.jpeg" alt="zheyao">
+            
+              <p class="site-author-name" itemprop="name">zheyao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zheyaoa" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.rookiehacker.org/" title="刘存展的博客" target="_blank">刘存展的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://118.24.65.116/" title="wrma的博客" target="_blank">wrma的博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#function-apply-thisArg-argsArray"><span class="nav-number">1.</span> <span class="nav-text">function.apply(thisArg,[argsArray])</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function-call-thisArg-arg1-args2-args3"><span class="nav-number">2.</span> <span class="nav-text">function.call(thisArg,arg1,args2,args3)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#function-bind-thisArg-arg1-arg2-…"><span class="nav-number">3.</span> <span class="nav-text">function.bind(thisArg,arg1,arg2,…)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bind函数的初步实现"><span class="nav-number">4.</span> <span class="nav-text">bind函数的初步实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#将bind函数绑定在原型链上"><span class="nav-number">5.</span> <span class="nav-text">将bind函数绑定在原型链上</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zheyao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

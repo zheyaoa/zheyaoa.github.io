@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Object,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 ，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign(">
+<meta name="keywords" content="Object">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ES6下JavaScript对象方法Object.assign()">
+<meta property="og:url" content="http://yoursite.com/2019/05/16/assign/index.html">
+<meta property="og:site_name" content="zheyao 的博客">
+<meta property="og:description" content="，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 ，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign(">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-18T13:40:52.840Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ES6下JavaScript对象方法Object.assign()">
+<meta name="twitter:description" content="，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 ，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法 最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign(">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/16/assign/">
+
+
+
+
+
+  <title>ES6下JavaScript对象方法Object.assign() | zheyao 的博客</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">zheyao 的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/16/assign/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zheyao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://cdn.zheyao.top/blogHeader.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zheyao 的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ES6下JavaScript对象方法Object.assign()</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-16T23:03:53+08:00">
+                2019-05-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/" itemprop="url" rel="index">
+                    <span itemprop="name">JavaScript</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/JavaScript/ECMAScript6/" itemprop="url" rel="index">
+                    <span itemprop="name">ECMAScript6</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>，所以最近看了看<a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create" target="_blank" rel="noopener">MDN_JavaScript</a>板块下的一些知识。这里总结一下<code>Object.assign()</code>的用法</p>
+<p>，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法</p>
+<p>最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法</p>
+<a id="more"></a> 
+<hr>
+<h3 id="Object-assign-target-…sources"><a href="#Object-assign-target-…sources" class="headerlink" title="Object.assign(target,…sources)"></a>Object.assign(target,…sources)</h3><blockquote>
+<p>target: 目标对象</p>
+<p>sources:  源对象</p>
+</blockquote>
+<ul>
+<li><p><strong>Object.assign()</strong>方法用于将所有<strong>可枚举属性</strong>的值从一个对象或多个原对象复制到目标对象。同时将返回目标对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = &#123; <span class="attr">a</span>: <span class="number">1</span> &#125;</span><br><span class="line"><span class="keyword">const</span> copy = <span class="built_in">Object</span>.assign(&#123;&#125;,obj)</span><br><span class="line"><span class="built_in">console</span>.log(copy) <span class="comment">//&#123;a:1&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.assign()</strong>方法可以复制Symbol属性</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> o1 = &#123;<span class="attr">a</span>:<span class="number">1</span>&#125;;</span><br><span class="line"><span class="keyword">const</span> o2 = &#123; [<span class="built_in">Symbol</span>(<span class="string">'foo'</span>)]:<span class="number">2</span>&#125;</span><br><span class="line"><span class="keyword">const</span> o3 = <span class="built_in">Object</span>.assign(o1,o2)</span><br><span class="line"><span class="built_in">console</span>.log(o3)  <span class="comment">//&#123;a:1, [Symbol('foo')]:2&#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.assign()</strong> 进行的是<strong>浅拷贝</strong>,如果说源对象的某个属性值是对象，那么目标对象拷贝得到的是这个对象的引用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> obj1 = &#123; <span class="attr">a</span>: <span class="number">0</span> , <span class="attr">b</span>: &#123; <span class="attr">c</span>: <span class="number">0</span>&#125;&#125;; </span><br><span class="line"><span class="keyword">let</span> obj2 = <span class="built_in">Object</span>.assign(&#123;&#125;, obj1); </span><br><span class="line"></span><br><span class="line">obj1.b.c = <span class="number">1</span></span><br><span class="line"><span class="built_in">console</span>.log(obj2.b.c)  <span class="comment">//2</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.assign()</strong>不能拷贝<strong>继承属性</strong>和<strong>不可枚举属性</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> obj = <span class="built_in">Object</span>.create(&#123;<span class="attr">foo</span>: <span class="number">1</span>&#125;, &#123; <span class="comment">// foo 是个继承属性。</span></span><br><span class="line">    bar: &#123;</span><br><span class="line">        value: <span class="number">2</span>  <span class="comment">// bar 是个不可枚举属性。</span></span><br><span class="line">    &#125;,</span><br><span class="line">    baz: &#123;</span><br><span class="line">        value: <span class="number">3</span>,</span><br><span class="line">        enumerable: <span class="literal">true</span>  <span class="comment">// baz 是个自身可枚举属性。</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> copy = <span class="built_in">Object</span>.assign(&#123;&#125;, obj);</span><br><span class="line"><span class="built_in">console</span>.log(copy); <span class="comment">// &#123; baz: 3 &#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.assign()</strong>合并相同的属性，会被后续参数中具有相同属性的其他对象覆盖 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> o1 = &#123; <span class="attr">a</span>: <span class="number">1</span>, <span class="attr">b</span>: <span class="number">1</span>, <span class="attr">c</span>: <span class="number">1</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> o2 = &#123; <span class="attr">b</span>: <span class="number">2</span>, <span class="attr">c</span>: <span class="number">2</span> &#125;;</span><br><span class="line"><span class="keyword">const</span> o3 = &#123; <span class="attr">c</span>: <span class="number">3</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> obj = <span class="built_in">Object</span>.assign(&#123;&#125;, o1, o2, o3);</span><br><span class="line"><span class="built_in">console</span>.log(obj); <span class="comment">// &#123; a: 1, b: 2, c: 3 &#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>原始类型会被包装成对象</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> v1 = <span class="string">"abc"</span>;</span><br><span class="line"><span class="keyword">const</span> v2 = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">const</span> v3 = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">const</span> v4 = <span class="built_in">Symbol</span>(<span class="string">"foo"</span>)</span><br><span class="line"><span class="keyword">const</span> obj = <span class="built_in">Object</span>.assign(&#123;&#125;, v1, <span class="literal">null</span>, v2, <span class="literal">undefined</span>, v3, v4); </span><br><span class="line"><span class="comment">// 原始类型会被包装，null 和 undefined 会被忽略。</span></span><br><span class="line"><span class="comment">// 注意，只有字符串的包装对象才可能有自身可枚举属性。</span></span><br><span class="line"><span class="built_in">console</span>.log(obj); <span class="comment">// &#123; "0": "a", "1": "b", "2": "c" &#125;</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="Polyfill"><a href="#Polyfill" class="headerlink" title="Polyfill"></a>Polyfill</h3><blockquote>
+<p>此polyfill不支持symbol,因为ES5中没有Symbol</p>
+</blockquote>
+   <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">typeof</span> <span class="built_in">Object</span>.assign != <span class="string">'function'</span>)&#123;</span><br><span class="line">    <span class="built_in">Object</span>.defineProperty(<span class="built_in">Object</span>,<span class="string">'assign'</span>,&#123;</span><br><span class="line">        value:<span class="function"><span class="keyword">function</span>(<span class="params">target,sources</span>)</span>&#123;</span><br><span class="line"><span class="meta">            'use strict'</span></span><br><span class="line">            <span class="keyword">if</span>(target == <span class="literal">null</span>)&#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">TypeError</span>(<span class="string">'Cannot convert undefined or null to Object'</span>)</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">let</span> to = <span class="built_in">Object</span>(target);</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">var</span> index=<span class="number">1</span>;index&lt;<span class="built_in">arguments</span>.length;index++)&#123;</span><br><span class="line">                <span class="keyword">var</span> nextSource = <span class="built_in">arguments</span>[index];</span><br><span class="line">                <span class="keyword">if</span>(nextSource != <span class="literal">null</span>)&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">let</span> nextkey <span class="keyword">in</span> nextSource)&#123;</span><br><span class="line">                        <span class="keyword">if</span>(<span class="built_in">Object</span>.prototype.hasOwnProperty.call(nextSource,nextkey))&#123;</span><br><span class="line">                            to[nextkey]=nextSource[nextkey];</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> to;</span><br><span class="line">        &#125;,</span><br><span class="line">        configurable:<span class="literal">true</span>,</span><br><span class="line">        writable:<span class="literal">true</span></span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Object/" rel="tag"># Object</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/05/01/Inherit/" rel="next" title="JavaScript 类的继承">
+                <i class="fa fa-chevron-left"></i> JavaScript 类的继承
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/03/bind/" rel="prev" title="ES6下的Function.bind方法">
+                ES6下的Function.bind方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="http://cdn.zheyao.top/blogHeader.jpeg" alt="zheyao">
+            
+              <p class="site-author-name" itemprop="name">zheyao</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/zheyaoa" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-block">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-link"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="https://blog.rookiehacker.org/" title="刘存展的博客" target="_blank">刘存展的博客</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://118.24.65.116/" title="wrma的博客" target="_blank">wrma的博客</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#Object-assign-target-…sources"><span class="nav-number">1.</span> <span class="nav-text">Object.assign(target,…sources)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Polyfill"><span class="nav-number">2.</span> <span class="nav-text">Polyfill</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">zheyao</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
