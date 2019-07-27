@@ -5,9 +5,7 @@ tags: Object
 categories: [JavaScript,ECMAScript6]
 ---
 
-，所以最近看了看[MDN_JavaScript](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)板块下的一些知识。这里总结一下`Object.assign()`的用法
-
-，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法
+所以最近看了看[MDN_JavaScript](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Object/create)板块下的一些知识。这里总结一下`Object.assign()`的用法
 
 最近看一些框架，组件的实现，发现有些地方不是很能理解(原生js学的太差了)，所以最近看了看MDN_JavaScript板块下的一些知识。这里总结一下Object.assign()的用法
 
