@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Object,">
+  <meta name="keywords" content="this,">
 
 
 
@@ -79,18 +79,20 @@
 
 
 
-<meta name="description" content="JavaScript 中可以说一切都是对象，这里复习了一下如何去创建一个JavaScript对象。">
-<meta name="keywords" content="Object">
+<meta name="description" content="最近碰到了一个很基础的问题,看似很基础,但是却与我对整个JavaScript的理解不大一致。所以花了很长一段事件去弄懂它(还是JavaScript基础不够扎实啊),在这里做一个总结。">
+<meta name="keywords" content="this">
 <meta property="og:type" content="article">
-<meta property="og:title" content="JavaScript创建对象">
-<meta property="og:url" content="http://yoursite.com/2019/01/22/createObject/index.html">
+<meta property="og:title" content="JavaScript 普通函数和箭头函数引发的一些思考">
+<meta property="og:url" content="http://yoursite.com/2019/07/23/this/index.html">
 <meta property="og:site_name" content="zheyao 的博客">
-<meta property="og:description" content="JavaScript 中可以说一切都是对象，这里复习了一下如何去创建一个JavaScript对象。">
+<meta property="og:description" content="最近碰到了一个很基础的问题,看似很基础,但是却与我对整个JavaScript的理解不大一致。所以花了很长一段事件去弄懂它(还是JavaScript基础不够扎实啊),在这里做一个总结。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-07-18T13:40:52.840Z">
+<meta property="og:image" content="http://cdn.zheyao.top/this.png">
+<meta property="og:updated_time" content="2019-07-26T05:51:06.221Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="JavaScript创建对象">
-<meta name="twitter:description" content="JavaScript 中可以说一切都是对象，这里复习了一下如何去创建一个JavaScript对象。">
+<meta name="twitter:title" content="JavaScript 普通函数和箭头函数引发的一些思考">
+<meta name="twitter:description" content="最近碰到了一个很基础的问题,看似很基础,但是却与我对整个JavaScript的理解不大一致。所以花了很长一段事件去弄懂它(还是JavaScript基础不够扎实啊),在这里做一个总结。">
+<meta name="twitter:image" content="http://cdn.zheyao.top/this.png">
 
 
 
@@ -120,13 +122,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/01/22/createObject/">
+  <link rel="canonical" href="http://yoursite.com/2019/07/23/this/">
 
 
 
 
 
-  <title>JavaScript创建对象 | zheyao 的博客</title>
+  <title>JavaScript 普通函数和箭头函数引发的一些思考 | zheyao 的博客</title>
   
 
 
@@ -263,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/22/createObject/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/23/this/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="zheyao">
@@ -280,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">JavaScript创建对象</h1>
+          <h1 class="post-title" itemprop="name headline">JavaScript 普通函数和箭头函数引发的一些思考</h1>
         
 
         <div class="post-meta">
@@ -292,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-22T21:08:45+08:00">
-                2019-01-22
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-23T14:24:30+08:00">
+                2019-07-23
               </time>
             
 
@@ -352,50 +354,39 @@
       
 
       
-        <blockquote>
-<p>JavaScript 中可以说一切都是对象，这里复习了一下如何去创建一个JavaScript对象。</p>
-</blockquote>
+        <p>最近碰到了一个很基础的问题,看似很基础,但是却与我对整个JavaScript的理解不大一致。所以花了很长一段事件去弄懂它(还是JavaScript基础不够扎实啊),在这里做一个总结。</p>
 <a id="more"></a>
-<h3 id="JavaScript-创建对象"><a href="#JavaScript-创建对象" class="headerlink" title="JavaScript 创建对象"></a>JavaScript 创建对象</h3><blockquote>
-<p>在JavaScript中所有的事物都是对象，例如String,Date,数值等等,对象只是带有属性和方法的特殊数据类型。此外JavaScript允许自定义对象。下面是创建对象的一些方法</p>
-</blockquote>
-<p>###Object 构造函数</p>
-<blockquote>
-<p>使用new 操作符跟Object构造函数,代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">person.name = <span class="string">'zheyao'</span>;</span><br><span class="line">person.age = <span class="number">20</span></span><br></pre></td></tr></table></figure>
-<h3 id="对象字面量创建对象"><a href="#对象字面量创建对象" class="headerlink" title="对象字面量创建对象"></a>对象字面量创建对象</h3><blockquote>
-<p>对象字面量是对象定义的一种简写方式，代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name:<span class="string">'zheyao'</span>,</span><br><span class="line">    age:<span class="number">20</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>虽然上面两种方法都可以创建创建单个对象，但这些方法又一个巨大的缺点。使用一个对象创建多个有相同属性的对象，会产生大量的重复代码。下面的方法将解决这些问题。</p>
-<h3 id="工厂模式"><a href="#工厂模式" class="headerlink" title="工厂模式"></a>工厂模式</h3><blockquote>
-<p>工厂模式是一种广为认知的设计模式，这种模式抽象了创建对象的具体过程。使用函数封装创建指定对象的细节。代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">createPerson</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">    o.name = <span class="string">'zheyao'</span>;</span><br><span class="line">    o.age = <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>工厂模式解决了创建多个相似代码的问题，却 没有带来对象识别的问题。下面描述的函数构造模式很好的解决了这个问题 。</p>
-<h3 id="构造函数模式"><a href="#构造函数模式" class="headerlink" title="构造函数模式"></a>构造函数模式</h3><blockquote>
-<p>构造函数模式可用于创建特定类型的对象。创建自定义的构造函数，从而可以创建自定义对象的类型，属以及方法。代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">    <span class="keyword">this</span>.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person1 = <span class="keyword">new</span> Person(<span class="string">'zheyao'</span>,<span class="number">20</span>);</span><br><span class="line"><span class="keyword">var</span> person2 = <span class="keyword">new</span> Person(<span class="string">'yw'</span>,<span class="number">19</span>);</span><br></pre></td></tr></table></figure>
-<p>在函数构造模式模式中，并没有显示的创建对象。当执行代码<strong>var o = new Person(‘zheyao’,20)</strong>时，我们可以理解为进行了如下操作</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> o = <span class="keyword">new</span> <span class="built_in">Object</span>();</span><br><span class="line">o = Person().call(o,<span class="string">'zheyao'</span>,<span class="number">20</span>)</span><br></pre></td></tr></table></figure>
-<p>函数构造模式解决了对象识别的问题 ，但是也同样出现了一个新的问题 ，当我们创建两个新的对象person1,person2时。构造函数中的sayName函数被实例化了两次。原型模式解决了这个问题。</p>
-<h3 id="原型模式"><a href="#原型模式" class="headerlink" title="`原型模式"></a>`原型模式</h3><blockquote>
-<p>我们创建的么一个函数都有一个<strong>原型(prototype)</strong>属性,可以用这个属性来共享一些相同类型的公共函数和属性，代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;</span><br><span class="line">Person.prototype.name = <span class="string">'zheyao'</span>;</span><br><span class="line">Person.prototype.age = <span class="number">20</span>;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>原型模式的好处是可以共享属性，换句话说不必在构造函数中定义对象实例的信息，而是可以将这些将这些信息直接添加到原型对象。但原型模式也不是没有缺点，对于原型链的引用类型来说，问题就比较突出，代码如下。</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params"></span>)</span>&#123;&#125;;</span><br><span class="line">Person.prototype = &#123;</span><br><span class="line">    <span class="keyword">constructor</span>:Person,</span><br><span class="line">    colors:['red','black']</span><br><span class="line">&#125;</span><br><span class="line">var p1 = new Person();</span><br><span class="line">var p2 = new Person();</span><br><span class="line">p1.colors.push('orange');</span><br><span class="line"></span><br><span class="line">console.log(p1.colors) //'red','black','orange'</span><br><span class="line">console.log(p2.colors) //'red','black','orange'</span><br></pre></td></tr></table></figure>
-<p>可以看出当我们给对象p1的colors属性添加了一个值‘orange’时，对象p2的colors属性随之改变。这是因为colors并不是对象p1的实例属性。而是储存在p1的原型链中的。而对象p1,p2公用一个原型链。所以当属性在p1进行改变时。在p2也会随之改变。下面这种模式解决了这个问题</p>
+<h3 id="箭头函数和普通函数的this指向"><a href="#箭头函数和普通函数的this指向" class="headerlink" title="箭头函数和普通函数的this指向"></a>箭头函数和普通函数的this指向</h3><p>在　JavaScript  中普通函数和箭头函数的 this 的已经是一个老生常谈的话题，相信对于任何一个前端er来说都有有一些自己的理解。我的理解是这样的</p>
 <ul>
-<li>组合使用构造函数模式与原型模式</li>
+<li><p>普通函数的 this 在函数调用时确认</p>
+<p>举一个见的例子把</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    a:<span class="number">2</span>,</span><br><span class="line">    sayA:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    	<span class="built_in">console</span>.log(<span class="keyword">this</span>.a)   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.sayA()   <span class="comment">//2</span></span><br><span class="line"><span class="keyword">var</span> say = obj.sayA</span><br><span class="line">say()   <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>上面这个代码很好理解，当执行<code>obj.sayA()</code>时，函数是obj的一部分，所以此时的this 指向obj　输出为２,</p>
+<p>当<code>say = obj.say</code> 时，say 是window 下的一个函数，所以<code>say()</code>的结果是１</p>
+</li>
+<li><p>箭头函数的 this 在定义时确认(<strong><em>this 是最近的父级上下文</em></strong>)</p>
+<p>同样以上面这个例子为例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> a = <span class="number">1</span></span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">    a:<span class="number">2</span>,</span><br><span class="line">    say()=&gt;&#123;</span><br><span class="line">    	<span class="built_in">console</span>.log(<span class="keyword">this</span>.a)   </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">obj.sayA()   <span class="comment">//1</span></span><br><span class="line"><span class="keyword">var</span> say = obj.sayA</span><br><span class="line">say()   <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>两个函数执行都会输出1,原因很简单。使用箭头函数时的 this 在定义时就确认了。</p>
+<p>我们用babel转义一下上面的代码　</p>
+<p><strong><em>下面是babel转码结果</em></strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">"use strict"</span>;</span><br><span class="line"><span class="keyword">var</span> _this = <span class="keyword">void</span> <span class="number">0</span>;</span><br><span class="line"><span class="keyword">var</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">  a: <span class="number">2</span>,</span><br><span class="line">  say: <span class="function"><span class="keyword">function</span> <span class="title">say</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(_this.a);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">obj.sayA(); <span class="comment">//1</span></span><br><span class="line"><span class="keyword">var</span> say = obj.sayA;</span><br><span class="line">say(); <span class="comment">//1</span></span><br></pre></td></tr></table></figure>
+<p>可以看到this 指向了全局 window,且定义时就被确认。所以我们能输出两个1</p>
+</li>
 </ul>
-<blockquote>
-<p>创建对象的最常见方式,就是组合使用构造函数模式与原型模式。使用构造函数创建属于自己的实例属性。原型模式创建一些公共的属性。代码如下</p>
-</blockquote>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">Person</span>(<span class="params">name,age</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line">    <span class="keyword">this</span>.age = age;</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.sayName  = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>这种方法可以规避两种模式的缺点，是JavaScript中最常用的方法。</p>
+<h3 id="引发的一些思考"><a href="#引发的一些思考" class="headerlink" title="引发的一些思考"></a>引发的一些思考</h3><ul>
+<li>箭头函数的  <code>this</code>为什么指向 <code>window</code></li>
+</ul>
+<p>说了那么多，看起来都非常的理所当然。可是我有了一些困惑。为什么 在箭头函数中的<code>this</code> 没有指向 <code>obj</code> 而是指向 <code>window</code>呢？如果按理解的话 <code>this</code> 指向定义的地方，那 <code>this</code>不应该是指向<code>obj</code>吗 </p>
+<p>对此,查阅了一下资料后。我得出了一个结论。　<code>this</code> 是函数的执行上下文，　当我们使用箭头函数时,其自身的<code>this</code>由定义时的祖先的上下文所确定，但是在JavaScript中，对象是没有上下文的(有上下文的只有对象和函数)。我们来分析一下整个获取<code>this</code>的过程，首先我们获取到　箭头函数的父级 <code>obj</code> ,但是<code>obj</code>是没有 上下文的 (说人话没有 <code>this</code>),所以我们只能去 <code>obj</code> 的 父级 <code>window</code> 获取 <code>this</code>。  </p>
+<ul>
+<li>普通函数的 <code>this</code> 为什么指向 <code>obj</code> 呢 </li>
+</ul>
+<p>说了那么多 ，可能有人又会有些疑惑。不是说 对象没有上下文吗，那为什么普通 函数的<code>this</code>指向<code>obj</code>呢(对，说的 就是我自己  =. =)</p>
+<p>对此，我也 查阅了一些 <a href="https://www.ibm.com/developerworks/cn/web/1207_wangqf_jsthis/index.html" target="_blank" rel="noopener">资料</a> ,文中有这样一段话 </p>
+<p><img src="http://cdn.zheyao.top/this.png" alt=""></p>
+<p>在上个疑问中我们已经知道 ，函数是有自己的上下文的。所以说并不是对象有上下文导致普通函数的<code>this</code>指向对象,而是函数有执行上下文，他的值根据调用方式的不同，也会有所不同 。</p>
+<p>所以我们 的疑问 也能被解决了，<code>this</code> 由函数的上下文所确定，当函数由<code>obj.sayA()</code>方式调用时，此时的执行上下文(this)指向<code>obj</code>,所以在 普通函数中的 <code>this</code> 指向 <code>obj</code></p>
 
       
     </div>
@@ -413,7 +404,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Object/" rel="tag"># Object</a>
+            <a href="/tags/this/" rel="tag"># this</a>
           
         </div>
       
@@ -426,8 +417,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/01/01/first-page/" rel="next" title="first page">
-                <i class="fa fa-chevron-left"></i> first page
+              <a href="/2019/07/18/layout/" rel="next" title="详谈常见的圣杯/双飞翼布局">
+                <i class="fa fa-chevron-left"></i> 详谈常见的圣杯/双飞翼布局
               </a>
             
           </div>
@@ -436,8 +427,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/01/31/singleModel/" rel="prev" title="设计模式--单例模式">
-                设计模式--单例模式 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/07/26/ajax-cancel/" rel="prev" title="Ajax/axios 请求的取消">
+                Ajax/axios 请求的取消 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -600,7 +591,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#JavaScript-创建对象"><span class="nav-number">1.</span> <span class="nav-text">JavaScript 创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象字面量创建对象"><span class="nav-number">2.</span> <span class="nav-text">对象字面量创建对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工厂模式"><span class="nav-number">3.</span> <span class="nav-text">工厂模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#构造函数模式"><span class="nav-number">4.</span> <span class="nav-text">构造函数模式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#原型模式"><span class="nav-number">5.</span> <span class="nav-text">`原型模式</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#箭头函数和普通函数的this指向"><span class="nav-number">1.</span> <span class="nav-text">箭头函数和普通函数的this指向</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#引发的一些思考"><span class="nav-number">2.</span> <span class="nav-text">引发的一些思考</span></a></li></ol></div>
             
 
           </div>
