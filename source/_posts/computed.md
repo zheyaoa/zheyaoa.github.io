@@ -1,7 +1,8 @@
 ---
 title: Vue中computed的依赖收集
 date: 2019-09-07 12:15:44
-tags:
+tags: Vue.js
+categories: [JavaScript,Vue.js]
 ---
 
 最近面试的时候遇到了一个碰到了一个题目，大意如下,Vue中是如何对一个computed做到依赖收集的？当时没能回答上来，面试结束后做了一个小小的梳理。在这里做一个总结
