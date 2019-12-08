@@ -259,6 +259,170 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/29/vue-router-analyse/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="zheyao">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="http://cdn.zheyao.top/blogHeader.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="zheyao 的博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/11/29/vue-router-analyse/" itemprop="url">Vue-router 源码分析</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-11-29T12:21:36+08:00">
+                2019-11-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Vue-js/" itemprop="url" rel="index">
+                    <span itemprop="name">Vue.js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。</p>
+<h3 id="vue-router-的安装"><a href="#vue-router-的安装" class="headerlink" title="vue-router 的安装"></a>vue-router 的安装</h3><p><code>vue-route</code>本质上是一个基于 <code>vue.js</code> 的工具，在<code>vue.js</code>中使用一些自定义的工具一般通过<code>Vue.use</code>将工具挂载</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">'vue-router'</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueRouter)</span><br></pre></td></tr></table></figure>
+<p>当执行这段代码后，会执行<code>vue-router/src/install.js</code>下的<code>install</code>函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">install</span> (<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (install.installed &amp;&amp; _Vue === Vue) <span class="keyword">return</span></span><br><span class="line">  install.installed = <span class="literal">true</span></span><br><span class="line">  <span class="keyword">const</span> isDef = <span class="function"><span class="params">v</span> =&gt;</span> v !== <span class="literal">undefined</span></span><br><span class="line">  <span class="keyword">const</span> registerInstance = <span class="function">(<span class="params">vm, callVal</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> i = vm.$options._parentVnode</span><br><span class="line">    <span class="keyword">if</span> (isDef(i) &amp;&amp; isDef(i = i.data) &amp;&amp; isDef(i = i.registerRouteInstance)) &#123;</span><br><span class="line">      i(vm, callVal)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  Vue.mixin(&#123;</span><br><span class="line">    beforeCreate () &#123;</span><br><span class="line">      <span class="keyword">if</span> (isDef(<span class="keyword">this</span>.$options.router)) &#123;</span><br><span class="line">        <span class="keyword">this</span>._routerRoot = <span class="keyword">this</span></span><br><span class="line">        <span class="keyword">this</span>._router = <span class="keyword">this</span>.$options.router</span><br><span class="line">        <span class="keyword">this</span>._router.init(<span class="keyword">this</span>)</span><br><span class="line">        Vue.util.defineReactive(<span class="keyword">this</span>, <span class="string">'_route'</span>, <span class="keyword">this</span>._router.history.current)</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>._routerRoot = (<span class="keyword">this</span>.$parent &amp;&amp; <span class="keyword">this</span>.$parent._routerRoot) || <span class="keyword">this</span></span><br><span class="line">      &#125;</span><br><span class="line">      registerInstance(<span class="keyword">this</span>, <span class="keyword">this</span>)</span><br><span class="line">    &#125;,</span><br><span class="line">    destroyed () &#123;</span><br><span class="line">      registerInstance(<span class="keyword">this</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$router'</span>, &#123;</span><br><span class="line">    get () &#123; <span class="keyword">return</span> <span class="keyword">this</span>._routerRoot._router &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">Object</span>.defineProperty(Vue.prototype, <span class="string">'$route'</span>, &#123;</span><br><span class="line">    get () &#123; <span class="keyword">return</span> <span class="keyword">this</span>._routerRoot._route &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">  Vue.component(<span class="string">'RouterView'</span>, View)</span><br><span class="line">  Vue.component(<span class="string">'RouterLink'</span>, Link)</span><br><span class="line">  <span class="keyword">const</span> strats = Vue.config.optionMergeStrategies</span><br><span class="line">  <span class="comment">// use the same hook merging strategy for route hooks</span></span><br><span class="line">  strats.beforeRouteEnter = strats.beforeRouteLeave = strats.beforeRouteUpdate = 	strats.created</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>install</code>的逻辑很简单，大体流程如下。</p>
+<ol>
+<li>判断是否注册过<code>vue-router</code>组件，若注册过，则退出。否则开始注册</li>
+<li>利用<code>Vue.mixin</code>在每一个<code>vue</code>实例中挂载<code>beforeCreate hooks</code> </li>
+<li>在<code>vue</code>实例上挂载<code>$router/$route</code>属性</li>
+<li>注册<code>router-view/router-link</code>组件</li>
+</ol>
+<h3 id="vue-router实例的创建"><a href="#vue-router实例的创建" class="headerlink" title="vue-router实例的创建"></a>vue-router实例的创建</h3><p><code>vue-router</code>的使用通过<code>new Vue(options)</code>的方式实现初始化，代码位于<code>vue-router/src/index.js</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="class"><span class="keyword">class</span> <span class="title">VueRouter</span> </span>&#123;</span><br><span class="line">  <span class="keyword">static</span> install: <span class="function"><span class="params">()</span> =&gt;</span> <span class="keyword">void</span>;</span><br><span class="line">  <span class="keyword">static</span> version: string;</span><br><span class="line"></span><br><span class="line">  app: any;</span><br><span class="line">  apps: <span class="built_in">Array</span>&lt;any&gt;;</span><br><span class="line">  ready: boolean;</span><br><span class="line">  readyCbs: <span class="built_in">Array</span>&lt;<span class="built_in">Function</span>&gt;;</span><br><span class="line">  options: RouterOptions;</span><br><span class="line">  mode: string;</span><br><span class="line">  history: HashHistory | HTML5History | AbstractHistory;</span><br><span class="line">  matcher: Matcher;</span><br><span class="line">  fallback: boolean;</span><br><span class="line">  beforeHooks: <span class="built_in">Array</span>&lt;?NavigationGuard&gt;;</span><br><span class="line">  resolveHooks: <span class="built_in">Array</span>&lt;?NavigationGuard&gt;;</span><br><span class="line">  afterHooks: <span class="built_in">Array</span>&lt;?AfterNavigationHook&gt;;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">constructor</span> (options: RouterOptions = &#123;&#125;) &#123;</span><br><span class="line">    <span class="keyword">this</span>.app = <span class="literal">null</span></span><br><span class="line">    <span class="keyword">this</span>.apps = []</span><br><span class="line">    <span class="keyword">this</span>.options = options</span><br><span class="line">    <span class="keyword">this</span>.beforeHooks = []</span><br><span class="line">    <span class="keyword">this</span>.resolveHooks = []</span><br><span class="line">    <span class="keyword">this</span>.afterHooks = []</span><br><span class="line">    <span class="keyword">this</span>.matcher = createMatcher(options.routes || [], <span class="keyword">this</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">let</span> mode = options.mode || <span class="string">'hash'</span></span><br><span class="line">    <span class="keyword">this</span>.fallback = mode === <span class="string">'history'</span> &amp;&amp; !supportsPushState &amp;&amp; options.fallback !== <span class="literal">false</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.fallback) &#123;</span><br><span class="line">      mode = <span class="string">'hash'</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!inBrowser) &#123;</span><br><span class="line">      mode = <span class="string">'abstract'</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">this</span>.mode = mode</span><br><span class="line">    <span class="keyword">switch</span> (mode) &#123;</span><br><span class="line">      <span class="keyword">case</span> <span class="string">'history'</span>:</span><br><span class="line">        <span class="keyword">this</span>.history = <span class="keyword">new</span> HTML5History(<span class="keyword">this</span>, options.base)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">case</span> <span class="string">'hash'</span>:</span><br><span class="line">        <span class="keyword">this</span>.history = <span class="keyword">new</span> HashHistory(<span class="keyword">this</span>, options.base, <span class="keyword">this</span>.fallback)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">case</span> <span class="string">'abstract'</span>:</span><br><span class="line">        <span class="keyword">this</span>.history = <span class="keyword">new</span> AbstractHistory(<span class="keyword">this</span>, options.base)</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">      <span class="keyword">default</span>:</span><br><span class="line">        <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">          assert(<span class="literal">false</span>, <span class="string">`invalid mode: <span class="subst">$&#123;mode&#125;</span>`</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="创建matcher-map"><a href="#创建matcher-map" class="headerlink" title="创建matcher-map"></a>创建matcher-map</h4><p>初始化<code>vue-router</code>实例时首先会根据<code>option</code>创建对应的<code>matcher-map</code>,代码实现在</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.matcher = createMatcher(options.routes || [], <span class="keyword">this</span>)</span><br></pre></td></tr></table></figure>
+<p><code>createMatcher</code>的大致流程如下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="function"><span class="keyword">function</span> <span class="title">createMatcher</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">  routes: Array&lt;RouteConfig&gt;,</span></span></span><br><span class="line"><span class="function"><span class="params">  router: VueRouter</span></span></span><br><span class="line"><span class="function"><span class="params"></span>): <span class="title">Matcher</span> </span>&#123;</span><br><span class="line">  <span class="keyword">const</span> &#123; pathList, pathMap, nameMap &#125; = createRouteMap(routes)</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">addRoutes</span> (<span class="params">routes</span>) </span>&#123;</span><br><span class="line">    createRouteMap(routes, pathList, pathMap, nameMap)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">match</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    raw: RawLocation,</span></span></span><br><span class="line"><span class="function"><span class="params">    currentRoute?: Route,</span></span></span><br><span class="line"><span class="function"><span class="params">    redirectedFrom?: Location</span></span></span><br><span class="line"><span class="function"><span class="params">  </span>): <span class="title">Route</span> </span>&#123;</span><br><span class="line">    <span class="keyword">const</span> location = normalizeLocation(raw, currentRoute, <span class="literal">false</span>, router)</span><br><span class="line">    <span class="keyword">const</span> &#123; name &#125; = location</span><br><span class="line">    <span class="keyword">if</span> (name) &#123;</span><br><span class="line">      <span class="keyword">const</span> record = nameMap[name]</span><br><span class="line">      <span class="keyword">if</span> (process.env.NODE_ENV !== <span class="string">'production'</span>) &#123;</span><br><span class="line">        warn(record, <span class="string">`Route with name '<span class="subst">$&#123;name&#125;</span>' does not exist`</span>)</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> (!record) <span class="keyword">return</span> _createRoute(<span class="literal">null</span>, location)</span><br><span class="line">      <span class="keyword">const</span> paramNames = record.regex.keys</span><br><span class="line">        .filter(<span class="function"><span class="params">key</span> =&gt;</span> !key.optional)</span><br><span class="line">        .map(<span class="function"><span class="params">key</span> =&gt;</span> key.name)</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">typeof</span> location.params !== <span class="string">'object'</span>) &#123;</span><br><span class="line">        location.params = &#123;&#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (currentRoute &amp;&amp; <span class="keyword">typeof</span> currentRoute.params === <span class="string">'object'</span>) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">const</span> key <span class="keyword">in</span> currentRoute.params) &#123;</span><br><span class="line">          <span class="keyword">if</span> (!(key <span class="keyword">in</span> location.params) &amp;&amp; paramNames.indexOf(key) &gt; <span class="number">-1</span>) &#123;</span><br><span class="line">            location.params[key] = currentRoute.params[key]</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      location.path = fillParams(record.path, location.params, <span class="string">`named route "<span class="subst">$&#123;name&#125;</span>"`</span>)</span><br><span class="line">      <span class="keyword">return</span> _createRoute(record, location, redirectedFrom)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (location.path) &#123;</span><br><span class="line">      location.params = &#123;&#125;</span><br><span class="line">      <span class="keyword">for</span> (<span class="keyword">let</span> i = <span class="number">0</span>; i &lt; pathList.length; i++) &#123;</span><br><span class="line">        <span class="keyword">const</span> path = pathList[i]</span><br><span class="line">        <span class="keyword">const</span> record = pathMap[path]</span><br><span class="line">        <span class="keyword">if</span> (matchRoute(record.regex, location.path, location.params)) &#123;</span><br><span class="line">          <span class="keyword">return</span> _createRoute(record, location, redirectedFrom)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// no match</span></span><br><span class="line">    <span class="keyword">return</span> _createRoute(<span class="literal">null</span>, location)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">_createRoute</span> (<span class="params"></span></span></span><br><span class="line"><span class="function"><span class="params">    record: ?RouteRecord,</span></span></span><br><span class="line"><span class="function"><span class="params">    location: Location,</span></span></span><br><span class="line"><span class="function"><span class="params">    redirectedFrom?: Location</span></span></span><br><span class="line"><span class="function"><span class="params">  </span>): <span class="title">Route</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (record &amp;&amp; record.redirect) &#123;</span><br><span class="line">      <span class="keyword">return</span> redirect(record, redirectedFrom || location)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (record &amp;&amp; record.matchAs) &#123;</span><br><span class="line">      <span class="keyword">return</span> alias(record, location, record.matchAs)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> createRoute(record, location, redirectedFrom, router)</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    match,</span><br><span class="line">    addRoutes</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>createMatcher</code>首先将执行<code>createRouteMap(routes)</code>函数，将对<code>option</code>生成对应的<code>pathList,pathMap与nameMap</code>,然后暴露<code>matcher 与 addRoutes</code>两个函数。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">function match (</span><br><span class="line">    raw: RawLocation,</span><br><span class="line">    currentRoute?: Route,</span><br><span class="line">    redirectedFrom?: Location</span><br><span class="line"> ): Route</span><br></pre></td></tr></table></figure>
+<p><code>matcher</code>传入当前路径<code>row</code>与相对路径<code>currentRoute</code>获得一个新的路径，然后在<code>pathList/nameList</code>中返回对应的<code>router</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">addRoutes</span> (<span class="params">routes</span>) </span>&#123;</span><br><span class="line">	createRouteMap(routes, pathList, pathMap, nameMap)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>addRoutes</code>的逻辑也很简单，往<code>pathList,pathMap,nameMap</code>添加新的路由信息，同时<code>vue-router</code>暴露了一个<code>api:addRoutes</code>就是调用了这个方法。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/11/12/mergeConfig/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1598,152 +1762,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/07/18/layout/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="zheyao">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="http://cdn.zheyao.top/blogHeader.jpeg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="zheyao 的博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/07/18/layout/" itemprop="url">详谈常见的圣杯/双飞翼布局</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-07-18T21:50:01+08:00">
-                2019-07-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/CSS/" itemprop="url" rel="index">
-                    <span itemprop="name">CSS</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>我，前端菜鸡。今天面百度的时候被问到了所谓的圣杯，双飞翼布局。这两个东西一直都有所了解但是没真正的研究过，所以今天脸都被打肿了！所以今天仔细研究了一下所谓的双飞翼/圣杯布局在这里做一个总结。</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2019/07/18/layout/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -1796,7 +1814,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">21</span>
+                  <span class="site-state-item-count">22</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1818,7 +1836,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-count">18</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
