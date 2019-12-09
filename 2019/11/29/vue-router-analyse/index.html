@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。 vue-router 的安装vue-route本质上是一个基于 vue.js 的工具，在vue.js中使用一些自定义的工具一般通过Vue.use将工具挂载 1234import Vue from &apos;vue&apos;i">
+<meta name="description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。">
 <meta name="keywords" content="vue-router">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Vue-router 源码分析">
 <meta property="og:url" content="http://yoursite.com/2019/11/29/vue-router-analyse/index.html">
 <meta property="og:site_name" content="zheyao 的博客">
-<meta property="og:description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。 vue-router 的安装vue-route本质上是一个基于 vue.js 的工具，在vue.js中使用一些自定义的工具一般通过Vue.use将工具挂载 1234import Vue from &apos;vue&apos;i">
+<meta property="og:description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-12-08T06:06:54.240Z">
+<meta property="og:updated_time" content="2019-12-08T15:22:24.252Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Vue-router 源码分析">
-<meta name="twitter:description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。 vue-router 的安装vue-route本质上是一个基于 vue.js 的工具，在vue.js中使用一些自定义的工具一般通过Vue.use将工具挂载 1234import Vue from &apos;vue&apos;i">
+<meta name="twitter:description" content="对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。">
 
 
 
@@ -353,6 +353,7 @@
 
       
         <p>对于以Vue.js 为主要技术栈的前端工作者来说，熟练的使用Vue-router也是必须的。要想熟练的使用某个工具,必须了解其内部实现的原理。这里对vue-router的实现流程做一个梳理。</p>
+<a id="more"></a>
 <h3 id="vue-router-的安装"><a href="#vue-router-的安装" class="headerlink" title="vue-router 的安装"></a>vue-router 的安装</h3><p><code>vue-route</code>本质上是一个基于 <code>vue.js</code> 的工具，在<code>vue.js</code>中使用一些自定义的工具一般通过<code>Vue.use</code>将工具挂载</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> Vue <span class="keyword">from</span> <span class="string">'vue'</span></span><br><span class="line"><span class="keyword">import</span> VueRouter <span class="keyword">from</span> <span class="string">'vue-router'</span></span><br><span class="line"></span><br><span class="line">Vue.use(VueRouter)</span><br></pre></td></tr></table></figure>
 <p>当执行这段代码后，会执行<code>vue-router/src/install.js</code>下的<code>install</code>函数</p>
@@ -414,6 +415,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/08/cache/" rel="prev" title="浏览器缓存机制">
+                浏览器缓存机制 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -492,7 +497,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">23</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -514,7 +519,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
